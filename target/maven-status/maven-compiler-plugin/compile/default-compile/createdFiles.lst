@@ -1,0 +1,7 @@
+tpi\config\DatabaseConnection.class
+tpi\dao\GenericDao.class
+tpi\entities\DomicilioFiscal.class
+tpi\entities\Empresa.class
+tpi\main\AppMenu.class
+tpi\main\Main.class
+tpi\service\GenericService.class
