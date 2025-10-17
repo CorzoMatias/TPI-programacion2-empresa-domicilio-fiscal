@@ -2,7 +2,7 @@ package tpi.dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
+// import java.util.List;
 
 public interface GenericDao<T> {
     // Autonomas (manejan su propia Connection)

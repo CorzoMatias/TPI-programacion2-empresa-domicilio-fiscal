@@ -1,5 +1,10 @@
 tpi\config\DatabaseConnection.class
+tpi\dao\EmpresaDao.class
 tpi\dao\GenericDao.class
+tpi\dao\DomicilioFiscalDao.class
+tpi\service\DomicilioFiscalService.class
+tpi\main\InputUtils.class
+tpi\service\EmpresaService.class
 tpi\entities\DomicilioFiscal.class
 tpi\entities\Empresa.class
 tpi\main\AppMenu.class

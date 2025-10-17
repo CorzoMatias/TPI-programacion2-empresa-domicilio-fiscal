@@ -1,0 +1,80 @@
+@startuml
+title Modelo 1→1 unidireccional: Empresa → DomicilioFiscal
+
+package "tpi.config" {
+  class DatabaseConnection {
+    - PROP_FILE : String
+    - url : String
+    - user : String
+    - password : String
+    - driver : String
+    + getConnection() : java.sql.Connection
+  }
+}
+
+package "tpi.entities" {
+  class Empresa {
+    - id : Long
+    - eliminado : boolean
+    - razonSocial : String
+    - cuit : String
+    - actividadPrincipal : String
+    - email : String
+    - domicilioFiscal : DomicilioFiscal
+  }
+
+  class DomicilioFiscal {
+    - id : Long
+    - eliminado : boolean
+    - calle : String
+    - numero : Integer
+    - ciudad : String
+    - provincia : String
+    - codigoPostal : String
+    - pais : String
+  }
+
+  Empresa "1" o-- "1" DomicilioFiscal : 1→1 (unidireccional)
+}
+
+package "tpi.dao" {
+  interface GenericDao<T> {
+    + crear(t:T) : T
+    + leerPorId(id:Long) : T
+    + leerTodos() : List<T>
+    + actualizar(t:T) : T
+    + eliminarLogico(id:Long) : boolean
+    + crear(t:T, conn:Connection) : T
+    + actualizar(t:T, conn:Connection) : T
+    + eliminarLogico(id:Long, conn:Connection) : boolean
+  }
+
+  class EmpresaDao
+  class DomicilioFiscalDao
+  GenericDao <|.. EmpresaDao
+  GenericDao <|.. DomicilioFiscalDao
+}
+
+package "tpi.service" {
+  interface GenericService<T> {
+    + insertar(t:T) : T
+    + actualizar(t:T) : T
+    + eliminar(id:Long) : boolean
+    + getById(id:Long) : T
+    + getAll() : List<T>
+  }
+
+  class EmpresaService
+  class DomicilioFiscalService
+
+  GenericService <|.. EmpresaService
+  GenericService <|.. DomicilioFiscalService
+}
+
+package "tpi.main" {
+  class Main
+  class AppMenu
+  class InputUtils
+}
+
+@enduml
