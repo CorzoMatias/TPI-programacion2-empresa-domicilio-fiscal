@@ -14,17 +14,26 @@ Cumple las consignas del documento “Trabajo Final Integrador – Programación
 
 1. Ejecutar los scripts (en este orden) en MySQL Workbench o CLI:
 
-   - `sql/01_create_schema.sql`  
-     Crea la BD `tfi_empresa`, tablas `empresa` y `domicilio_fiscal`, FK **única** `empresa_id` (asegura 1→1) y `ON DELETE CASCADE`.
+   - `sql/01_create_schema.sql`: Crea la BD `tfi_empresa`, tablas `empresa` y `domicilio_fiscal`, FK **única** `empresa_id` (asegura 1→1) y `ON DELETE CASCADE`.
 
-   - `sql/02_seed_data.sql`  
-     Carga datos de ejemplo (2 empresas y sus domicilios).
+   - `sql/02_seed_data.sql`: Carga datos de ejemplo (2 empresas y sus domicilios).
 
-   - `sql/03_create_user.sql`  
-     Crea el usuario `tfi_user` con contraseña **CAMBIAR_ESTA_CLAVE**, y le otorga permisos sobre `tfi_empresa`
+   - `sql/03_create_user.sql`: Crea el usuario `tfi_user` con contraseña **CAMBIAR_ESTA_CLAVE**, y le otorga permisos sobre `tfi_empresa`
 
 
-## Build y Run
+## Compilación y ejecución
 
+Para ejecutar el código se debe hacer uso de un IDE compatible con Maven o bien ejecutar los siguientes comandos en consola:
+
+```bash
+# Compilación y ejecución del proyecto
+mvn exec:java
+```
+
+```bash
+# Construcción del JAR en caso de querer empaquetar el proyecto
 mvn clean package
-mvn exec:java -Dexec.mainClass="tpi.main.Main"
+```
+
+## Video
+<TBD>

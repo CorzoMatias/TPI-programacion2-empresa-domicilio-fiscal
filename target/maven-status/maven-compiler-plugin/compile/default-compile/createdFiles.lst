@@ -1,6 +1,7 @@
 tpi\config\DatabaseConnection.class
 tpi\dao\EmpresaDao.class
 tpi\dao\GenericDao.class
+tpi\service\ServiceException.class
 tpi\dao\DomicilioFiscalDao.class
 tpi\service\DomicilioFiscalService.class
 tpi\main\InputUtils.class
