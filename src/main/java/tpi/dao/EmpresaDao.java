@@ -85,7 +85,7 @@ public class EmpresaDao implements GenericDao<Empresa> {
     }
 
     @Override
-    public List<Empresa> leerTodos() throws SQLException {
+    public List<Empresa>  leerTodos() throws SQLException {
         String sql = "SELECT * FROM empresa WHERE eliminado=FALSE";
         List<Empresa> list = new ArrayList<>();
         try (Connection con = DatabaseConnection.getConnection();

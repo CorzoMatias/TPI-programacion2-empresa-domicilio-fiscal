@@ -50,59 +50,34 @@ public class AppMenu {
         }
     }
 
-    // --------- Opciones ---------
-
-    // private void crearEmpresaTransaccional() throws Exception {
-    //     System.out.println("\n-- Alta Empresa + Domicilio --");
-    //     Empresa e = new Empresa();
-    //     e.setRazonSocial(in.readNonEmpty("Razón Social").toUpperCase());
-    //     e.setCuit(in.readNonEmpty("CUIT"));
-    //     e.setActividadPrincipal(in.readNullable("Actividad principal"));
-    //     e.setEmail(in.readNullable("Email"));
-
-    //     DomicilioFiscal d = new DomicilioFiscal();
-    //     d.setCalle(in.readNonEmpty("Calle"));
-    //     d.setNumero(in.readPositiveIntNullable("Número"));
-    //     d.setCiudad(in.readNonEmpty("Ciudad").toUpperCase());
-    //     d.setProvincia(in.readNonEmpty("Provincia").toUpperCase());
-    //     d.setCodigoPostal(in.readNullable("Código Postal"));
-    //     d.setPais(in.readNonEmpty("País").toUpperCase());
-    //     e.setDomicilioFiscal(d);
-
-    //     Empresa creada = empresaService.insertar(e); // transacción commit/rollback
-    //     System.out.println("Empresa creada con éxito. La misma fue creada con ID: " + creada.getId());
-    //     System.out.println(creada);
-    // }
     private void crearEmpresaTransaccional() {
-    System.out.println("\n-- Alta Empresa + Domicilio --");
-    try {
-        Empresa e = new Empresa();
-        e.setRazonSocial(in.readNonEmpty("Razón Social").toUpperCase());
-        e.setCuit(in.readNonEmpty("CUIT"));
-        e.setActividadPrincipal(in.readNullable("Actividad principal"));
-        e.setEmail(in.readNullable("Email"));
+        System.out.println("\n-- Alta Empresa + Domicilio --");
+        try {
+            Empresa e = new Empresa();
+            e.setRazonSocial(in.readNonEmpty("Razón Social").toUpperCase());
+            e.setCuit(in.readNonEmpty("CUIT"));
+            e.setActividadPrincipal(in.readNullable("Actividad principal"));
+            e.setEmail(in.readNullable("Email"));
 
-        DomicilioFiscal d = new DomicilioFiscal();
-        d.setCalle(in.readNonEmpty("Calle"));
-        d.setNumero(in.readPositiveIntNullable("Número"));
-        d.setCiudad(in.readNonEmpty("Ciudad").toUpperCase());
-        d.setProvincia(in.readNonEmpty("Provincia").toUpperCase());
-        d.setCodigoPostal(in.readNullable("Código Postal"));
-        d.setPais(in.readNonEmpty("País").toUpperCase());
-        e.setDomicilioFiscal(d);
+            DomicilioFiscal d = new DomicilioFiscal();
+            d.setCalle(in.readNonEmpty("Calle"));
+            d.setNumero(in.readPositiveIntNullable("Número"));
+            d.setCiudad(in.readNonEmpty("Ciudad").toUpperCase());
+            d.setProvincia(in.readNonEmpty("Provincia").toUpperCase());
+            d.setCodigoPostal(in.readNullable("Código Postal"));
+            d.setPais(in.readNonEmpty("País").toUpperCase());
+            e.setDomicilioFiscal(d);
 
-        empresaService.insertar(e); // transacción commit/rollback
-        System.out.println("Empresa creada con éxito. ID: " + e.getId());
-        System.out.println(e);
+            empresaService.insertar(e); // transacción commit/rollback
+            System.out.println("Empresa creada con éxito. ID: " + e.getId());
+            System.out.println(e);
 
-    } catch (java.sql.SQLIntegrityConstraintViolationException dup) {
-        System.out.println("Error: CUIT duplicado. No se insertó la empresa (rollback).");
-    } catch (Exception ex) {
-        // Mensaje claro para validaciones/otros errores
-        System.out.println("Error: " + ex.getMessage());
-        // aca puede ir un logging interno, ej: log.debug("Fallo en alta", ex);
+        } catch (Exception ex) {
+            // Mensaje claro para validaciones/otros errores
+            System.out.println("Error: " + ex.getMessage());
+            // aca puede ir un logging interno, ej: log.debug("Fallo en alta", ex);
+        }
     }
-}
 
     private void listarEmpresas() throws Exception {
         System.out.println("\n-- Listado de Empresas --");

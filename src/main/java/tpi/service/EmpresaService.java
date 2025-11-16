@@ -7,6 +7,7 @@ import tpi.entities.DomicilioFiscal;
 import tpi.entities.Empresa;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class EmpresaService implements GenericService<Empresa> {
 
@@ -14,31 +15,31 @@ public class EmpresaService implements GenericService<Empresa> {
     private final DomicilioFiscalDao domicilioDao = new DomicilioFiscalDao();
 
     // ---------- Validaciones ----------
-    private void validar(Empresa e, boolean validarDomicilio) throws Exception {
-        if (e == null) throw new Exception("Empresa nula");
+    private void validar(Empresa e, boolean validarDomicilio) throws ServiceException {
+        if (e == null) throw new ServiceException("Empresa nula");
         if (e.getRazonSocial() == null || e.getRazonSocial().isBlank())
-            throw new Exception("La razón social es obligatoria");
+            throw new ServiceException("La razón social es obligatoria");
         if (e.getCuit() == null || e.getCuit().isBlank())
-            throw new Exception("El CUIT es obligatorio");
+            throw new ServiceException("El CUIT es obligatorio");
         if (e.getCuit().length() > 13)
-            throw new Exception("El CUIT no debe exceder 13 caracteres");
+            throw new ServiceException("El CUIT no debe exceder 13 caracteres");
         if (validarDomicilio) {
-            if (e.getDomicilioFiscal() == null) throw new Exception("El domicilio fiscal es obligatorio");
+            if (e.getDomicilioFiscal() == null) throw new ServiceException("El domicilio fiscal es obligatorio");
             validarDomicilio(e.getDomicilioFiscal());
         }
     }
 
-    private void validarDomicilio(DomicilioFiscal d) throws Exception {
-        if (d.getCalle() == null || d.getCalle().isBlank()) throw new Exception("Calle obligatoria");
-        if (d.getCiudad() == null || d.getCiudad().isBlank()) throw new Exception("Ciudad obligatoria");
-        if (d.getProvincia() == null || d.getProvincia().isBlank()) throw new Exception("Provincia obligatoria");
-        if (d.getPais() == null || d.getPais().isBlank()) throw new Exception("País obligatorio");
-        if (d.getNumero() != null && d.getNumero() < 0) throw new Exception("Número debe ser positivo");
+    private void validarDomicilio(DomicilioFiscal d) throws ServiceException {
+        if (d.getCalle() == null || d.getCalle().isBlank()) throw new ServiceException("Calle obligatoria");
+        if (d.getCiudad() == null || d.getCiudad().isBlank()) throw new ServiceException("Ciudad obligatoria");
+        if (d.getProvincia() == null || d.getProvincia().isBlank()) throw new ServiceException("Provincia obligatoria");
+        if (d.getPais() == null || d.getPais().isBlank()) throw new ServiceException("País obligatorio");
+        if (d.getNumero() != null && d.getNumero() < 0) throw new ServiceException("Número debe ser positivo");
     }
 
     // ---------- Transaccion insertar Empresa + Domicilio (1→1) ----------
     @Override
-    public Empresa insertar(Empresa e) throws Exception {
+    public Empresa insertar(Empresa e) throws ServiceException {
         validar(e, true);
 
         try (Connection con = DatabaseConnection.getConnection()) {
@@ -55,18 +56,21 @@ public class EmpresaService implements GenericService<Empresa> {
                 con.commit();
                 return e;
             } catch (Exception ex) {
+                System.out.println("Se realizará rollback por detección de un error");
                 con.rollback();
                 throw ex;
             } finally {
                 con.setAutoCommit(original);
             }
+        } catch (Exception ex) {
+            throw new ServiceException(ex);
         }
     }
 
     @Override
-    public Empresa actualizar(Empresa e) throws Exception {
+    public Empresa actualizar(Empresa e) throws ServiceException {
         validar(e, false);
-        if (e.getId() == null) throw new Exception("ID de empresa obligatorio para actualizar");
+        if (e.getId() == null) throw new ServiceException("ID de empresa obligatorio para actualizar");
 
         try (Connection con = DatabaseConnection.getConnection()) {
             boolean original = con.getAutoCommit();
@@ -87,12 +91,14 @@ public class EmpresaService implements GenericService<Empresa> {
             } finally {
                 con.setAutoCommit(original);
             }
+        } catch (Exception ex) {
+            throw new ServiceException(ex);
         }
     }
 
     @Override
-public boolean eliminar(Long id) throws Exception {
-    if (id == null) throw new Exception("ID obligatorio");
+public boolean eliminar(Long id) throws ServiceException {
+    if (id == null) throw new ServiceException("ID obligatorio");
     try (Connection con = DatabaseConnection.getConnection()) {
         boolean original = con.getAutoCommit();
         try {
@@ -112,23 +118,37 @@ public boolean eliminar(Long id) throws Exception {
         } finally {
             con.setAutoCommit(original);
         }
+    } catch (Exception e) {
+        throw new ServiceException(e);
     }
 }
 
 
     @Override
-    public Empresa getById(Long id) throws Exception {
-        if (id == null) throw new Exception("ID obligatorio");
-        return empresaDao.leerPorId(id);
+    public Empresa getById(Long id) throws ServiceException {
+        if (id == null) throw new ServiceException("ID obligatorio");
+        try {
+            return empresaDao.leerPorId(id);
+        } catch (SQLException e) {
+            throw new ServiceException(e);
+        }
     }
 
-    public Empresa getByCuit(String cuit) throws Exception {
-        if (cuit == null || cuit.isBlank()) throw new Exception("CUIT obligatorio");
-        return empresaDao.leerPorCuit(cuit);
+    public Empresa getByCuit(String cuit) throws ServiceException {
+        if (cuit == null || cuit.isBlank()) throw new ServiceException("CUIT obligatorio");
+        try {
+            return empresaDao.leerPorCuit(cuit);
+        } catch (SQLException e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public java.util.List<Empresa> getAll() throws Exception {
-        return empresaDao.leerTodos();
+    public java.util.List<Empresa> getAll() throws ServiceException {
+        try {
+            return empresaDao.leerTodos();
+        } catch (SQLException e) {
+            throw new ServiceException(e);
+        }
     }
 }
